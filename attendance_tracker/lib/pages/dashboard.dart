@@ -1,7 +1,9 @@
+import 'package:attendance_tracker/models/subject_model.dart';
 import 'package:attendance_tracker/services/dashboard_service.dart';
 import 'package:attendance_tracker/services/globalVariables.dart';
 import 'package:attendance_tracker/widgets/drawer.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -14,6 +16,12 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  Subjects s = Subjects();
+
+  void getSubjects() {
+    s.getSubject();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -21,7 +29,6 @@ class _DashboardState extends State<Dashboard> {
         child: Scaffold(
           resizeToAvoidBottomInset: true,
           appBar: AppBar(
-            elevation: 0.0,
             centerTitle: true,
             leading: InkWell(
               child: Container(
@@ -63,7 +70,26 @@ class _DashboardState extends State<Dashboard> {
                   border: Border.all(color: Colors.black, width: 3),
                 ),
                 child: Padding(
-                    padding: EdgeInsets.all(5), child: SingleChildScrollView()),
+                  padding: EdgeInsets.all(5),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        ElevatedButton(
+                          child: Text("Click"),
+                          onPressed: () => {getSubjects()},
+                        ),
+                        // ListView.builder(
+                        //   itemBuilder: (context, index) {
+                        //     return Container(
+
+                        //     );
+                        //   },
+                        //   itemCount: 1,
+                        // )
+                      ],
+                    ),
+                  ),
+                ),
               )
             ],
           ),

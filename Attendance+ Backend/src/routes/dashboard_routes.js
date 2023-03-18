@@ -15,7 +15,7 @@ router.get('/:email',async (req,res)=>{
             res.json({ success: false, error: "email-not-found" });
             return;
         }
-        res.json({ data: foundEmail });
+        res.json(foundEmail);
 
     }catch(e){
         console.log("Error"+e);
