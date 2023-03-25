@@ -48,16 +48,16 @@
 
 import 'dart:convert';
 
-class Subject {
+class SubjectModel {
    String id;
-  String userId;
+  String email;
   String subject;
   int totalclasses;
   int attendclasses;
   int v;
-  Subject({
+  SubjectModel({
     required this.id,
-    required this.userId,
+    required this.email,
     required this.subject,
     required this.totalclasses,
     required this.attendclasses,
@@ -68,7 +68,7 @@ class Subject {
     final result = <String, dynamic>{};
   
     result.addAll({'id': id});
-    result.addAll({'userId': userId});
+    result.addAll({'userId': email});
     result.addAll({'subject': subject});
     result.addAll({'totalclasses': totalclasses});
     result.addAll({'attendclasses': attendclasses});
@@ -77,10 +77,10 @@ class Subject {
     return result;
   }
 
-  factory Subject.fromMap(Map<String, dynamic> map) {
-    return Subject(
+  factory SubjectModel.fromMap(Map<String, dynamic> map) {
+    return SubjectModel(
       id: map['id'] ?? '',
-      userId: map['userId'] ?? '',
+      email: map['userId'] ?? '',
       subject: map['subject'] ?? '',
       totalclasses: map['totalclasses']?.toInt() ?? 0,
       attendclasses: map['attendclasses']?.toInt() ?? 0,
@@ -90,19 +90,19 @@ class Subject {
 
   String toJson() => json.encode(toMap());
 
-  factory Subject.fromJson(String source) => Subject.fromMap(json.decode(source));
+  factory SubjectModel.fromJson(String source) => SubjectModel.fromMap(json.decode(source));
 
-  Subject copyWith({
+  SubjectModel copyWith({
     String? id,
-    String? userId,
+    String? email,
     String? subject,
     int? totalclasses,
     int? attendclasses,
     int? v,
   }) {
-    return Subject(
+    return SubjectModel(
       id: id ?? this.id,
-      userId: userId ?? this.userId,
+      email: email?? this.email,
       subject: subject ?? this.subject,
       totalclasses: totalclasses ?? this.totalclasses,
       attendclasses: attendclasses ?? this.attendclasses,

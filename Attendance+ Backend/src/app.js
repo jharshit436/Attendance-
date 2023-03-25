@@ -11,11 +11,11 @@ app.use(bodyParser.json());
 
 // Database Conection 
 mongoose.connect('mongodb+srv://Developer:Harshit123@cluster0.qgbq7cs.mongodb.net/?retryWrites=true&w=majority').then(()=>{
-    console.log('Database Connected ');  
+    console.log('Database Connected ');
     })
 
 //middleware
-app.use("/api/user",userRoutes); 
+app.use("/api/user",userRoutes);
 app.use("/api/dashboard",dashbardRoutes);
 
 app.get("/",(req,res)=>{

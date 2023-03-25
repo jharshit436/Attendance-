@@ -3,8 +3,7 @@ const mongoose=require('mongoose');
 const dashboardSchema=new mongoose.Schema(
     {
         UserId:{
-            type: String,
-            required: true, 
+            type: String, 
         },
         subject:{
             type:String,
@@ -15,6 +14,10 @@ const dashboardSchema=new mongoose.Schema(
         attendclasses:{
             type:Number,
         },
+        email:{
+            type:String,
+            required:true
+        }
     }
 );
 

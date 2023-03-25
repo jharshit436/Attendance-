@@ -7,23 +7,22 @@ import 'package:flutter/material.dart';
 import 'globalVariables.dart';
 
 class Subjects {
-  List<Subject> s = [];
+  List<SubjectModel> list = [];
   void addSubject(
-      {required BuildContext context,
-      required String userId,
+      {required String email,
       required String subject,
       required int totalclasses,
       required int attendclasses}) async {
     try {
       String CurrentUrl =
           Networkvariable.baseUrl + "/api/dashboard/createsubject";
-      Subject subjectdata = Subject(
-          userId: userId,
+      SubjectModel subjectdata = SubjectModel(
+          email: email,
           subject: subject,
           totalclasses: totalclasses,
+          id: " ",
           attendclasses: attendclasses,
-          v: 0,
-          id: " ");
+          v: 0);
       http.Response response = await http.post(Uri.parse(CurrentUrl),
           headers: {"Content-Type": "application/json"},
           body: jsonEncode(subjectdata.toJson()),
@@ -34,10 +33,8 @@ class Subjects {
     }
   }
 
-
-
-  Future<List<Subject?>> getSubject() async {
-    List<Subject> sujectAttend = [];
+  Future<List<SubjectModel>> getSubject() async {
+    List<SubjectModel> sujectAttend = [];
     var CurrentUrl =
         "${Networkvariable.baseUrl}/api/dashboard/${LoginCredentials.email}";
     final response = await http.get(Uri.parse(CurrentUrl));
@@ -46,8 +43,8 @@ class Subjects {
     if (response.statusCode == 200) {
       List<dynamic> prods = json.decode(response.body);
       print(prods);
-      return prods.map((e) => Subject.fromMap(e)).toList();
-      
+      list = prods.map((e) => SubjectModel.fromMap(e)).toList();
+      return list;
     } else {
       throw Exception('Failed to load album');
     }

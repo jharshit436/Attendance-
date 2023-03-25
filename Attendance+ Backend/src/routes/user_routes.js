@@ -30,6 +30,36 @@ router.post('/createaccount', async (req,res)=>{
         console.log("error = "+e);
     }
 })
+router.get('/:id',async (req,res)=>{
+    try{
+        const id=req.params.UserId;
+        const foundEmail = await userModel.findOne({ id: id });
+        if(!foundEmail) {
+            res.json({ success: false, error: "email-not-found" });
+            return;
+        }
+        res.json(foundEmail);
+    }catch(e){
+        console.log("Error"+e);
+    }
+})
+
+router.patch('/updateDetails/:id',async (req ,res)=>{
+    try{
+        const id=req.params.id;
+        await userModel.findByIdAndUpdate(id,req.body,function (err,docs){
+            if(err){
+                console.log(err);
+            }
+            else{
+                res.send(docs);
+            }
+        })
+    }catch(e){
+        console.log(e);
+    }
+})
+
 router.post("/login",async function(req,res){
     const email=req.body.email;
     const password=req.body.password;

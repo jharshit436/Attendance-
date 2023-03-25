@@ -1,5 +1,5 @@
 class Networkvariable {
-  static String baseUrl = 'http://192.168.1.10:3000';
+  static String baseUrl = 'http://192.168.1.8:3000';
 }
 
 class LoginCredentials {

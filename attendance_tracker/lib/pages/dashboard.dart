@@ -2,6 +2,8 @@ import 'package:attendance_tracker/models/subject_model.dart';
 import 'package:attendance_tracker/services/dashboard_service.dart';
 import 'package:attendance_tracker/services/globalVariables.dart';
 import 'package:attendance_tracker/widgets/drawer.dart';
+import 'package:pie_chart/pie_chart.dart';
+import 'package:velocity_x/velocity_x.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -16,83 +18,187 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  Subjects s = Subjects();
+  void initState() {
+    super.initState();
+    loadList();
+  }
 
-  void getSubjects() {
-    s.getSubject();
+  List<SubjectModel> sm1 = [];
+  Subjects s = Subjects();
+  void loadList() async {
+    await s.getSubject();
+    sm1 = s.list;
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Material(
+        borderRadius: BorderRadius.circular(25),
         child: Scaffold(
+          drawerScrimColor: Vx.white,
+          backgroundColor: Vx.white,
           resizeToAvoidBottomInset: true,
           appBar: AppBar(
+            actions: <Widget>[Icon(CupertinoIcons.bell)],
+            foregroundColor: Vx.black,
+            elevation: 0.0,
+            backgroundColor: Color.fromARGB(0, 36, 17, 17),
             centerTitle: true,
-            leading: InkWell(
-              child: Container(
-                  child: Image.network(
-                "https://img.icons8.com/ios/256/long-arrow-right.png",
-              )),
-            ),
-            actions: <Widget>[
-              AddSubject(),
-            ],
-            backgroundColor: Colors.white,
             title: Container(
-              child: const Text(
-                "DashBoard",
-                style: TextStyle(color: Colors.black),
-              ),
+              child: "DashBoard".text.bold.make(),
+              // style: TextStyle(color: Colors.black)
             ),
           ),
-          body: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: Container(
-                  height: 250,
-                  decoration: BoxDecoration(
-                    //color: Colors.red,
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: Colors.black, width: 3),
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  //color: Colors.red,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: Colors.black, width: 3),
-                ),
-                child: Padding(
-                  padding: EdgeInsets.all(5),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        ElevatedButton(
-                          child: Text("Click"),
-                          onPressed: () => {getSubjects()},
-                        ),
-                        // ListView.builder(
-                        //   itemBuilder: (context, index) {
-                        //     return Container(
-
-                        //     );
-                        //   },
-                        //   itemCount: 1,
-                        // )
-                      ],
-                    ),
-                  ),
-                ),
-              )
-            ],
+          body: Container(
+            child: FutureBuilder(
+                future: s.getSubject(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return ListView.builder(
+                        itemCount: sm1.length,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: EdgeInsets.all(10),
+                            child: AnimatedContainer(
+                              duration:
+                                  Duration(milliseconds: 300 + (index * 100)),
+                              curve: Curves.easeInOut,
+                              height: 125,
+                              width: 100,
+                              decoration: BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(25)),
+                                  border: Border.all(
+                                    color: Colors.grey,
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Vx.gray100,
+                                      blurRadius: 2.0,
+                                      spreadRadius: 0.0,
+                                      offset: Offset(2.0, 2.0),
+                                    )
+                                  ]),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    height: 120,
+                                    width: 120,
+                                    // pie chart
+                                    child: PieChart(
+                                      animationDuration:
+                                          Duration(milliseconds: 800),
+                                      dataMap: {
+                                        "Present":
+                                            sm1[index].attendclasses.toDouble(),
+                                        "Absent": (sm1[index].totalclasses -
+                                                sm1[index].attendclasses)
+                                            .toDouble()
+                                      },
+                                      chartRadius:
+                                          MediaQuery.of(context).size.width,
+                                      chartValuesOptions: ChartValuesOptions(
+                                          showChartValuesInPercentage: true),
+                                      legendOptions:
+                                          LegendOptions(showLegends: false),
+                                    ),
+                                  ),
+                                  Column(
+                                    children: [
+                                      // name
+                                      Container(
+                                        child: Center(
+                                          child: (sm1[index].subject)
+                                              .text
+                                              .size(30)
+                                              .make(),
+                                        ),
+                                      ),
+                                      Row(
+                                        children: [
+                                          // Attendance
+                                          Column(
+                                            children: [
+                                              Container(
+                                                  child: Text("Total Class: " +
+                                                      sm1[index]
+                                                          .totalclasses
+                                                          .toString())),
+                                              Container(
+                                                  child: Text("Attend: " +
+                                                      sm1[index]
+                                                          .attendclasses
+                                                          .toString()))
+                                            ],
+                                          ),
+                                          Column(
+                                            children: [
+                                              const SizedBox(
+                                                width: 50,
+                                                height: 0,
+                                              ),
+                                              Column(
+                                                children: [
+                                                  SizedBox(
+                                                    width: 150,
+                                                  ),
+                                                  InkWell(
+                                                    child: AnimatedContainer(
+                                                      duration:
+                                                          Duration(seconds: 3),
+                                                      height: 35,
+                                                      width: 75,
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: Text("Present"),
+                                                      decoration: BoxDecoration(
+                                                          color: Vx.blue300,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(8)),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              const SizedBox(
+                                                height: 10,
+                                                width: 15,
+                                              ),
+                                              InkWell(
+                                                child: AnimatedContainer(
+                                                  duration:
+                                                      Duration(seconds: 3),
+                                                  height: 35,
+                                                  width: 75,
+                                                  alignment: Alignment.center,
+                                                  child: Text("Absent"),
+                                                  decoration: BoxDecoration(
+                                                      color: Vx.green300,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8)),
+                                                ),
+                                              )
+                                            ],
+                                          )
+                                        ],
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
+                          );
+                        });
+                  } else {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                }),
           ),
+          floatingActionButton: AddSubject(),
           drawer: Drawer(
             child: MyDrawer(),
           ),
@@ -115,8 +221,7 @@ class _AddSubjectState extends State<AddSubject> {
 
   void AddSubject() {
     addSubject_localInstance.addSubject(
-        context: context,
-        userId: LoginCredentials.email,
+        email: LoginCredentials.email,
         subject: subjectController.text,
         totalclasses: 0,
         attendclasses: 0);
@@ -124,44 +229,28 @@ class _AddSubjectState extends State<AddSubject> {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      child: Container(
-          child: Image.network(
-        "https://cdn-icons-png.flaticon.com/512/3018/3018447.png",
-      )),
-      onTap: () {
-        // // Navigator.pushNamed(context, '/AddSubject');
-        // final text = "some ifo of user";
-        // final snackBar = SnackBar(
-        //   content: Text(text),
-        //   duration: Duration(seconds: 60),
-        //   action: SnackBarAction(label: "Dismiss", onPressed: () {}),
-        // );
-        // ScaffoldMessenger.of(context).showSnackBar(snackBar);
-        showModalBottomSheet(
-            context: context,
-            isScrollControlled: true,
-            builder: (BuildContext context) {
-              return SizedBox(
-                height: 200,
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                        bottom: MediaQuery.of(context).viewInsets.bottom),
-                    child: Column(
-                      children: [
+    return FloatingActionButton(
+        child: Icon(CupertinoIcons.add_circled_solid),
+        onPressed: () {
+          showModalBottomSheet(
+              shape: RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.vertical(top: Radius.circular(20))),
+              context: context,
+              builder: ((BuildContext context) {
+                return SizedBox(
+                  height: 200,
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                          bottom: MediaQuery.of(context).viewInsets.bottom),
+                      child: Column(children: [
                         const SizedBox(
                           height: 15,
                         ),
-                        const Text(
-                          "Enter Details",
-                          style: TextStyle(
-                            fontSize: 35,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
+                        "Enter Details".text.size(39).bold.make(),
                         Padding(
-                          padding: const EdgeInsets.symmetric(
+                          padding: EdgeInsets.symmetric(
                               vertical: 10, horizontal: 28),
                           child: TextFormField(
                             controller: subjectController,
@@ -175,16 +264,71 @@ class _AddSubjectState extends State<AddSubject> {
                             onPressed: () {
                               AddSubject();
                             },
-                            child: const Text("Add"),
+                            child: "Add".text.make(),
                           ),
                         )
-                      ],
+                      ]),
                     ),
                   ),
-                ),
-              );
-            });
-      },
-    );
+                );
+              }));
+        });
+    // return InkWell(
+    //   child: Container(
+    //       child: Image.network(
+    //     "https://cdn-icons-png.flaticon.com/512/3018/3018447.png",
+    //   )),
+    //   onTap: () {
+    // showModalBottomSheet(
+    //     context: context,
+    //     isScrollControlled: true,
+    //     builder: (BuildContext context) {
+    //       return SizedBox(
+    //         height: 200,
+    //         child: SingleChildScrollView(
+    //           child: Padding(
+    //             padding: EdgeInsets.only(
+    //                 bottom: MediaQuery.of(context).viewInsets.bottom),
+    //             child: Column(
+    //               children: [
+    //                 const SizedBox(
+    //                   height: 15,
+    //                 ),
+    //                 const Text(
+    //                   "Enter Details",
+    //                   style: TextStyle(
+    //                     fontSize: 35,
+    //                     fontWeight: FontWeight.w400,
+    //                   ),
+    //                 ),
+    //                 Padding(
+    //                   padding: const EdgeInsets.symmetric(
+    //                       vertical: 10, horizontal: 28),
+    //                   child: TextFormField(
+    //                     controller: subjectController,
+    //                     decoration: const InputDecoration(
+    //                         labelText: "Subject Name ",
+    //                         hintText: "Subject Name"),
+    //                   ),
+    //                 ),
+    //                 Center(
+    //                   child: ElevatedButton(
+    //                     onPressed: () {
+    //                       setState(() {
+    //                          AddSubject();
+    //                       });
+
+    //                     },
+    //                     child: const Text("Add"),
+    //                   ),
+    //                 )
+    //                   ],
+    //                 ),
+    //               ),
+    //             ),
+    //           );
+    //         });
+    //   },
+    // );
   }
 }
