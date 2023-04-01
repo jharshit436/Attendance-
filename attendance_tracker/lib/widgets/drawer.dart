@@ -1,3 +1,6 @@
+import 'package:attendance_tracker/pages/contactus.dart';
+import 'package:attendance_tracker/pages/dashboard.dart';
+import 'package:attendance_tracker/pages/profile.dart';
 import 'package:attendance_tracker/services/dashboard_service.dart';
 import 'package:attendance_tracker/services/globalVariables.dart';
 import 'package:flutter/cupertino.dart';
@@ -21,58 +24,69 @@ class _MyDrawerState extends State<MyDrawer> {
       color: Vx.white,
       child: ListView(
         children: [
-          DrawerHeader(
-            child: UserAccountsDrawerHeader(
-              decoration: BoxDecoration(color: Colors.black12),
-              accountEmail: Text(LoginCredentials.email,
-                  style: TextStyle(color: Colors.black)),
-              accountName:
-                  Text("Harshit", style: TextStyle(color: Colors.black)),
-              // currentAccountPicture: Image.network(ImageUrl), for square image
-              // currentAccountPicture: CircleAvatar(
-              //   backgroundImage: NetworkImage(ImageUrl),
-              //   radius: 40,
-              //)
-            ),
-          ),
-          ListTile(
-            onTap: () {},
-            leading: Icon(
-              CupertinoIcons.home,
-              color: Colors.blueAccent,
-            ),
-            title: Text(
-              "Home",
-              style: TextStyle(color: Colors.black),
-            ),
-          ),
-          InkWell(
-            onTap: () {
-              Navigator.pushNamed(context, '/Profile');
-            },
-            child: ListTile(
-              leading: Icon(
-                CupertinoIcons.profile_circled,
-                color: Colors.blueAccent,
-              ),
-              title: Text(
-                "Profile",
-                style: TextStyle(color: Colors.black),
+          DrawerHeader(child: Container(
+            child: Column(children: [
+              Icon(CupertinoIcons.person,size: 100,),
+              Center(
+                child: Column(children: [
+                  SizedBox(height: 15,),
+                  (LoginCredentials.email).text.color(Vx.blue500).make()
+                ],),
+              )
+            ],),
+          )),
+          Column(
+              children:[
+                InkWell(
+                  onTap: (){
+                //Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboard()));
+                },
+                  child: Container(
+                      child:Row(children: [
+                        Icon(CupertinoIcons.home,size: 40,),
+                        SizedBox(width: 25,),
+                        ("Home").text.bold.color(Vx.blue500).make()
+                      ],
+                )
               ),
             ),
-          ),
-          ListTile(
-            leading: Icon(
-              CupertinoIcons.mail_solid,
-              color: Colors.blueAccent,
-            ),
-            title: Text(
-              "Contact Us",
-              style: TextStyle(color: Colors.black),
-            ),
+                SizedBox(
+                  height: 15,
+                ),
+                InkWell(
+                  onTap: (){
+                    //Navigator.pop(context);
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => Profile()));
+                  },
+                  child: Container(
+                      child:Row(children: [
+                        Icon(CupertinoIcons.person_alt_circle,size: 40,),
+                        SizedBox(width: 15,),
+                        ("Profile").text.color(Vx.blue500).bold.make()
+                      ],
+                      )
+                  ),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                InkWell(
+                  onTap: (){
+                    //Navigator.pop(context);
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => contactUs()));
+                  },
+                  child: Container(
+                      child:Row(children: [
+                        Icon(CupertinoIcons.mail_solid,size: 40,),
+                        SizedBox(width: 15,),
+                        ("Contact Us").text.color(Vx.blue500).bold.make()
+                      ],
+                      )
+                  ),
+                ),
+              ]
           )
-        ],
-      ),
-    );
+    ]));
   }
 }

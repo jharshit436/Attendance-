@@ -1,4 +1,5 @@
 import 'package:attendance_tracker/models/subject_model.dart';
+import 'package:attendance_tracker/services/attendance_manager.dart';
 import 'package:attendance_tracker/services/dashboard_service.dart';
 import 'package:attendance_tracker/services/globalVariables.dart';
 import 'package:attendance_tracker/widgets/drawer.dart';
@@ -9,6 +10,8 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import 'alert.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -21,6 +24,64 @@ class _DashboardState extends State<Dashboard> {
   void initState() {
     super.initState();
     loadList();
+  }
+
+  MarkAttendace ma = MarkAttendace();
+
+  void markPresnt(int index) {
+    setState(() {
+      ma.Present(
+          context: context,
+          id: sm1[index].id,
+          subject: sm1[index].subject,
+          email: LoginCredentials.email,
+          total: sm1[index].totalclasses,
+          attended: sm1[index].attendclasses);
+    });
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => Dashboard()));
+  }
+
+  void undoPresnt(int index) {
+    setState(() {
+      ma.UndoPresent(
+          context: context,
+          id: sm1[index].id,
+          subject: sm1[index].subject,
+          email: LoginCredentials.email,
+          total: sm1[index].totalclasses,
+          attended: sm1[index].attendclasses);
+    });
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => Dashboard()));
+  }
+
+  void markAbsent(int index) {
+    setState(() {
+      ma.Absent(
+          context: context,
+          id: sm1[index].id,
+          subject: sm1[index].subject,
+          email: LoginCredentials.email,
+          total: sm1[index].totalclasses,
+          attended: sm1[index].attendclasses);
+    });
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => Dashboard()));
+  }
+
+  void undoAbsent(int index) {
+    setState(() {
+      ma.UndoAbsent(
+          context: context,
+          id: sm1[index].id,
+          subject: sm1[index].subject,
+          email: LoginCredentials.email,
+          total: sm1[index].totalclasses,
+          attended: sm1[index].attendclasses);
+    });
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => Dashboard()));
   }
 
   List<SubjectModel> sm1 = [];
@@ -36,17 +97,16 @@ class _DashboardState extends State<Dashboard> {
       home: Material(
         borderRadius: BorderRadius.circular(25),
         child: Scaffold(
-          drawerScrimColor: Vx.white,
           backgroundColor: Vx.white,
           resizeToAvoidBottomInset: true,
           appBar: AppBar(
-            actions: <Widget>[Icon(CupertinoIcons.bell)],
+            actions: <Widget>[Alerts()],
             foregroundColor: Vx.black,
             elevation: 0.0,
             backgroundColor: Color.fromARGB(0, 36, 17, 17),
             centerTitle: true,
             title: Container(
-              child: "DashBoard".text.bold.make(),
+              child: "Dashboard".text.bold.make(),
               // style: TextStyle(color: Colors.black)
             ),
           ),
@@ -72,7 +132,7 @@ class _DashboardState extends State<Dashboard> {
                                   border: Border.all(
                                     color: Colors.grey,
                                   ),
-                                  boxShadow: [
+                                  boxShadow: const [
                                     BoxShadow(
                                       color: Vx.gray100,
                                       blurRadius: 2.0,
@@ -107,14 +167,45 @@ class _DashboardState extends State<Dashboard> {
                                   Column(
                                     children: [
                                       // name
-                                      Container(
-                                        child: Center(
-                                          child: (sm1[index].subject)
-                                              .text
-                                              .size(30)
-                                              .make(),
+                                      Row(children: [
+                                        Container(
+                                          child: Center(
+                                            child: (sm1[index].subject)
+                                                .text
+                                                .size(30)
+                                                .make(),
+                                          ),
                                         ),
-                                      ),
+                                        Container(
+                                          alignment: Alignment.centerRight,
+                                          child: Container(
+                                            alignment: Alignment.topRight,
+                                            child: PopupMenuButton(
+                                              iconSize: 22,
+                                              itemBuilder: (context) => [
+                                                PopupMenuItem(
+                                                  child: Text("Undo Present"),
+                                                  onTap: () {
+                                                    undoPresnt(index);
+                                                  },
+                                                ),
+                                                PopupMenuItem(
+                                                  child: Text("Undo Absent"),
+                                                  onTap: () {
+                                                    undoAbsent(index);
+                                                  },
+                                                ),
+                                                PopupMenuItem(
+                                                    child: Text(
+                                                  "Delete",
+                                                  style: TextStyle(
+                                                      color: Vx.red500),
+                                                ))
+                                              ],
+                                            ),
+                                          ),
+                                        )
+                                      ]),
                                       Row(
                                         children: [
                                           // Attendance
@@ -135,7 +226,7 @@ class _DashboardState extends State<Dashboard> {
                                           Column(
                                             children: [
                                               const SizedBox(
-                                                width: 50,
+                                                width: 0,
                                                 height: 0,
                                               ),
                                               Column(
@@ -147,17 +238,22 @@ class _DashboardState extends State<Dashboard> {
                                                     child: AnimatedContainer(
                                                       duration:
                                                           Duration(seconds: 3),
-                                                      height: 35,
+                                                      height: 30,
                                                       width: 75,
                                                       alignment:
                                                           Alignment.center,
                                                       child: Text("Present"),
                                                       decoration: BoxDecoration(
-                                                          color: Vx.blue300,
+                                                          color: Vx.green300,
                                                           borderRadius:
                                                               BorderRadius
                                                                   .circular(8)),
                                                     ),
+                                                    onTap: () {
+                                                      setState(() {
+                                                        markPresnt(index);
+                                                      });
+                                                    },
                                                   ),
                                                 ],
                                               ),
@@ -169,19 +265,23 @@ class _DashboardState extends State<Dashboard> {
                                                 child: AnimatedContainer(
                                                   duration:
                                                       Duration(seconds: 3),
-                                                  height: 35,
+                                                  height: 30,
                                                   width: 75,
                                                   alignment: Alignment.center,
                                                   child: Text("Absent"),
                                                   decoration: BoxDecoration(
-                                                      color: Vx.green300,
+                                                      color: Color.fromARGB(
+                                                          246, 245, 98, 61),
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               8)),
                                                 ),
+                                                onTap: () {
+                                                  markAbsent(index);
+                                                },
                                               )
                                             ],
-                                          )
+                                          ),
                                         ],
                                       )
                                     ],

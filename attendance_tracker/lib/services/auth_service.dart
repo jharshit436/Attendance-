@@ -86,3 +86,18 @@ class AuthService {
     }
   }
 }
+
+class AuthError extends StatefulWidget {
+  const AuthError({Key? key}) : super(key: key);
+
+  @override
+  State<AuthError> createState() => _AuthErrorState();
+}
+
+class _AuthErrorState extends State<AuthError> {
+  @override
+  Widget build(BuildContext context) {
+    return Material();
+  }
+}
+
