@@ -10,6 +10,11 @@ class contactUs extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         backgroundColor: Colors.white,
+        body: Column(
+          children: [
+            
+          ],
+        ),
       ),
     );
   }

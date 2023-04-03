@@ -66,7 +66,7 @@ router.post("/login",async function(req,res){
 
     const foundUser=await userModel.findOne({email:email});
     if(!foundUser){
-        res.json({ success:false , error:"user not found"});
+        res.status(404).json({ success:false, error:"user not found"});
         return;
     }
     const correctPassword=await bcrypt.compare(password , foundUser.password);
@@ -79,6 +79,7 @@ router.post("/login",async function(req,res){
     console.log(req.body);
     console.log(token);
     res.json({token:token})
+    
 })
 
 module.exports=router;

@@ -7,8 +7,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
-
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
@@ -26,8 +24,18 @@ class _LoginPageState extends State<LoginPage> {
 
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+
+  @override
+  void dispose() {
+    _passwordController.dispose();
+    _emailController.dispose();
+    // TODO: implement dispose
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    var hidepassword = true;
     return Material(
       child: Scaffold(
         backgroundColor: Vx.white,
@@ -39,19 +47,33 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(
                   height: 80,
                 ),
-                Icon(CupertinoIcons.person,size: 80,),
+                Icon(
+                  CupertinoIcons.person,
+                  size: 80,
+                ),
                 const SizedBox(
                   height: 20,
                 ),
                 Text(
                   'Welcome',
-                  style: TextStyle(fontSize: 28,),
+                  style: TextStyle(
+                    fontSize: 28,
+                  ),
                 ),
                 Padding(
                   padding: EdgeInsets.all(60),
                   child: Column(
                     children: [
                       TextFormField(
+                        validator: (value) {
+                          if (value == null ||
+                              value.isEmpty ||
+                              !value.contains('@') ||
+                              !value.contains('.')) {
+                            return 'Invalid Email';
+                          }
+                          return null;
+                        },
                         controller: _emailController,
                         decoration: const InputDecoration(
                           prefixIcon: Icon(CupertinoIcons.mail),
@@ -64,7 +86,14 @@ class _LoginPageState extends State<LoginPage> {
                         height: 15,
                       ),
                       TextFormField(
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'please enter your Password';
+                          }
+                          return null;
+                        },
                         controller: _passwordController,
+                        obscureText: hidepassword,
                         decoration: const InputDecoration(
                           fillColor: Vx.white,
                           iconColor: Vx.white,
@@ -79,8 +108,9 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       InkWell(
                         onTap: () {
-                          LoginUser();
-
+                          if (_signInKey.currentState!.validate()) {
+                            LoginUser();
+                          }
                         },
                         child: Container(
                           height: 50,
@@ -117,7 +147,11 @@ class _LoginPageState extends State<LoginPage> {
                                       fontSize: 18, color: Vx.blue200),
                                 ),
                                 onTap: () {
-                                  Navigator.pushNamed(context, '/AuthsignUp');
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: ((context) =>
+                                              SignUpPage())));
                                 },
                               ),
                             ],
@@ -172,129 +206,155 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Material(
-        child: Form(
-          key: _signUpKey,
-          child: Scaffold(
-            resizeToAvoidBottomInset: true,
-            backgroundColor: Vx.white,
-            body: SingleChildScrollView(
-              child: Column(children: [
-                SizedBox(
-                  height: 80,
+      child: Form(
+        key: _signUpKey,
+        child: Scaffold(
+          resizeToAvoidBottomInset: true,
+          backgroundColor: Vx.white,
+          body: SingleChildScrollView(
+            child: Column(children: [
+              SizedBox(
+                height: 80,
+              ),
+              Icon(
+                CupertinoIcons.person,
+                size: 80,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              const Text(
+                'Welcome',
+                style: TextStyle(
+                  fontSize: 28,
                 ),
-                Icon(CupertinoIcons.person,size: 80,),
-                const SizedBox(
-                  height: 20,
-                ),
-                const Text(
-                  'Welcome',
-                  style: TextStyle(fontSize: 28,),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(60),
-                  child: Column(children: [
-                    TextFormField(
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter your name';
-                        }
-                        return null;
-                      },
-                      decoration: const InputDecoration(
-                        prefixIcon: Icon(CupertinoIcons.person_alt),
-                        hintText: "Enter Name",
-                        labelText: "Enter Name",
+              ),
+              Padding(
+                padding: const EdgeInsets.all(60),
+                child: Column(children: [
+                  TextFormField(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your name';
+                      }
+                      return null;
+                    },
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(CupertinoIcons.person_alt),
+                      hintText: "Enter Name",
+                      labelText: "Enter Name",
+                    ),
+                    controller: _nameController,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  TextFormField(
+                    validator: (value) {
+                      if (value == null ||
+                          value.isEmpty ||
+                          !value.contains('@') ||
+                          !value.contains('.')) {
+                        return 'Invalid Email';
+                      }
+                      return null;
+                    },
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(CupertinoIcons.mail),
+                      hintText: "Enter Email",
+                      labelText: "Enter Email",
+                    ),
+                    controller: _emailController,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  TextFormField(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'please enter your Password';
+                      }
+                      if (value.length < 4) {
+                        return 'Your Password Must be 4 character';
+                      }
+                      return null;
+                    },
+                    obscureText: true
+                    ,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(CupertinoIcons.lock_fill),
+                      hintText: "Enter Password",
+                      labelText: "Enter Password",
+                    ),
+                    controller: _passwordController,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  InkWell(
+                    child: Container(
+                      height: 50,
+                      width: 150,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.circular(8)),
+                      child: const Text(
+                        "Sign Up",
+                        style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
                       ),
-                      controller: _nameController,
                     ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    TextFormField(
-                      validator: (value) {
-                        if (value == null ||
-                            value.isEmpty ||
-                            !value.contains('@') ||
-                            !value.contains('.')) {
-                          return 'Invalid Email';
-                        }
-                        return null;
-                      },
-                      decoration: const InputDecoration(
-                        prefixIcon: Icon(CupertinoIcons.mail),
-                        hintText: "Enter Email",
-                        labelText: "Enter Email",
-                      ),
-                      controller: _emailController,
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    TextFormField(
-                      decoration: const InputDecoration(
-                        prefixIcon: Icon(CupertinoIcons.lock_fill),
-                        hintText: "Enter Password",
-                        labelText: "Enter Password",
-                      ),
-                      controller: _passwordController,
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    InkWell(
-                      child: Container(
-                        height: 50,
-                        width: 150,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                            color: Colors.blue,
-                            borderRadius: BorderRadius.circular(8)),
-                        child: const Text(
-                          "Sign Up",
-                          style: TextStyle(
-                              fontSize: 28,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white),
-                        ),
-                      ),
-                      onTap: () {
-                        if (_signUpKey.currentState!.validate()) {
-                          signUpUser();
-                        }
-                      },
-                    ),
-                    // ignore: avoid_unnecessary_containers
-                    Container(
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text(
-                              "Already Have Account ?",
-                              style: TextStyle(fontSize: 16),
+                    onTap: () {
+                      if (_signUpKey.currentState!.validate()) {
+                        signUpUser();
+                      }
+                    },
+                  ),
+                  // ignore: avoid_unnecessary_containers
+                  Container(
+                    child: Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            "Already Have Account ?",
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          InkWell(
+                            child: const Text(
+                              " Login",
+                              style: TextStyle(fontSize: 18, color: Vx.blue100),
                             ),
-                            InkWell(
-                              child: const Text(
-                                " Login",
-                                style:
-                                    TextStyle(fontSize: 18, color: Vx.blue100),
-                              ),
-                              onTap: () {
-                                Navigator.pushNamed(context, 'Authlogin');
-                              },
-                            ),
-                          ],
-                        ),
+                            onTap: () {
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => LoginPage()));
+                            },
+                          ),
+                        ],
                       ),
                     ),
-                  ]),
-                )
-              ]),
-            ),
+                  ),
+                ]),
+              )
+            ]),
           ),
         ),
+      ),
     );
   }
 }

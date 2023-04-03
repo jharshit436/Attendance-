@@ -22,14 +22,16 @@ class MarkAttendace {
           subject: subject,
           totalclasses: total + 1,
           attendclasses: attended + 1,
-          v: 0, dashboardId: '');
+          v: 0,
+          dashboardId: '');
       print(subjectdata.email);
-      String CurrentUrl =
-          Networkvariable.baseUrl + "/api/dashboard/updateDetails/"+subjectdata.id;
+      String CurrentUrl = Networkvariable.baseUrl +
+          "/api/dashboard/updateDetails/" +
+          subjectdata.id;
       var response = await http.post(Uri.parse(CurrentUrl),
           body: jsonEncode({
-            "totalclasses":subjectdata.totalclasses,
-            "attendclasses":subjectdata.attendclasses
+            "totalclasses": subjectdata.totalclasses,
+            "attendclasses": subjectdata.attendclasses
           }),
           headers: {"Content-Type": "application/json"},
           encoding: Encoding.getByName("utf-8"));
@@ -39,6 +41,7 @@ class MarkAttendace {
       print(e);
     }
   }
+
   void Absent(
       {required BuildContext context,
       required String id,
@@ -53,14 +56,16 @@ class MarkAttendace {
           subject: subject,
           totalclasses: total + 1,
           attendclasses: attended,
-          v: 0, dashboardId: '');
+          v: 0,
+          dashboardId: '');
       print(subjectdata.attendclasses);
-      String CurrentUrl =
-          Networkvariable.baseUrl + "/api/dashboard/updateDetails/"+subjectdata.id;
+      String CurrentUrl = Networkvariable.baseUrl +
+          "/api/dashboard/updateDetails/" +
+          subjectdata.id;
       var response = await http.post(Uri.parse(CurrentUrl),
           body: jsonEncode({
-            "totalclasses":subjectdata.totalclasses,
-            "attendclasses":subjectdata.attendclasses
+            "totalclasses": subjectdata.totalclasses,
+            "attendclasses": subjectdata.attendclasses
           }),
           headers: {"Content-Type": "application/json"},
           encoding: Encoding.getByName("utf-8"));
@@ -70,6 +75,7 @@ class MarkAttendace {
       print(e);
     }
   }
+
   void UndoAbsent(
       {required BuildContext context,
       required String id,
@@ -83,15 +89,17 @@ class MarkAttendace {
           email: email,
           subject: subject,
           totalclasses: total,
-          attendclasses: attended-1,
-          v: 0, dashboardId: '');
+          attendclasses: attended - 1,
+          v: 0,
+          dashboardId: '');
       print(subjectdata.attendclasses);
-      String CurrentUrl =
-          Networkvariable.baseUrl + "/api/dashboard/updateDetails/"+subjectdata.id;
+      String CurrentUrl = Networkvariable.baseUrl +
+          "/api/dashboard/updateDetails/" +
+          subjectdata.id;
       var response = await http.post(Uri.parse(CurrentUrl),
           body: jsonEncode({
-            "totalclasses":subjectdata.totalclasses,
-            "attendclasses":subjectdata.attendclasses
+            "totalclasses": subjectdata.totalclasses,
+            "attendclasses": subjectdata.attendclasses
           }),
           headers: {"Content-Type": "application/json"},
           encoding: Encoding.getByName("utf-8"));
@@ -101,6 +109,7 @@ class MarkAttendace {
       print(e);
     }
   }
+
   void UndoPresent(
       {required BuildContext context,
       required String id,
@@ -114,20 +123,52 @@ class MarkAttendace {
           email: email,
           subject: subject,
           totalclasses: total - 1,
-          attendclasses: attended -1,
-          v: 0, dashboardId: '');
+          attendclasses: attended - 1,
+          v: 0,
+          dashboardId: '');
       print(subjectdata.attendclasses);
-      String CurrentUrl =
-          Networkvariable.baseUrl + "/api/dashboard/updateDetails/"+subjectdata.id;
+      String CurrentUrl = Networkvariable.baseUrl +
+          "/api/dashboard/updateDetails/" +
+          subjectdata.id;
       var response = await http.post(Uri.parse(CurrentUrl),
           body: jsonEncode({
-            "totalclasses":subjectdata.totalclasses,
-            "attendclasses":subjectdata.attendclasses
+            "totalclasses": subjectdata.totalclasses,
+            "attendclasses": subjectdata.attendclasses
           }),
           headers: {"Content-Type": "application/json"},
           encoding: Encoding.getByName("utf-8"));
       print(response.statusCode.toString());
       print(response.body.toString());
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void DeleteSubject(
+      {required BuildContext context,
+      required String id,
+      required String subject,
+      required String email,
+      required int total,
+      required int attended}) async {
+    try {
+      Dashboard subjectdata = Dashboard(
+          id: id.toString(),
+          email: email,
+          subject: subject,
+          totalclasses: total,
+          attendclasses: attended,
+          v: 0,
+          dashboardId: '');
+      print(subjectdata.attendclasses);
+      String CurrentUrl =
+          Networkvariable.baseUrl + "/api/dashboard/Delete/" + subjectdata.id;
+      print(subjectdata.id);
+      var response = await http.post(Uri.parse(CurrentUrl),
+          body: jsonEncode({"id": subjectdata.id.toString()}),
+          headers: {"Content-Type": "application/json"},
+          encoding: Encoding.getByName("utf-8"));
+      print(response.statusCode.toString());
     } catch (e) {
       print(e);
     }

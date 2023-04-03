@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:attendance_tracker/models/user_model.dart';
+import 'package:attendance_tracker/pages/dashboard.dart';
 import 'package:attendance_tracker/services/globalVariables.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -46,11 +48,12 @@ class AuthService {
           encoding: Encoding.getByName("utf-8"));
       print(response.statusCode);
       if (response.statusCode == 200) {
-        //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        //       content: Text(
-        //           "Registration Successfull, Login using Same Credentials ")));
-        //
-        Navigator.pushNamed(context, '/Dashboard');
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(
+                "Registration Successfull, Login using Same Credentials ")));
+
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => Dashboard()));
         LoginCredentials.email = email;
       } else {
         // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -73,12 +76,16 @@ class AuthService {
           headers: {"Content-Type": "application/json"},
           body: jsonEncode(userData.toJson()),
           encoding: Encoding.getByName("utf-8"));
-      print(response.statusCode);
+      
       if (response.statusCode == 200) {
-        Navigator.pushNamed(context, '/Dashboard');
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => Dashboard()));
         print("Success");
         LoginCredentials.email = email;
-      } else {
+      } else if (response.statusCode == 401) {
+        
+      }
+       else {
         print("error");
       }
     } catch (e) {
@@ -86,18 +93,3 @@ class AuthService {
     }
   }
 }
-
-class AuthError extends StatefulWidget {
-  const AuthError({Key? key}) : super(key: key);
-
-  @override
-  State<AuthError> createState() => _AuthErrorState();
-}
-
-class _AuthErrorState extends State<AuthError> {
-  @override
-  Widget build(BuildContext context) {
-    return Material();
-  }
-}
-

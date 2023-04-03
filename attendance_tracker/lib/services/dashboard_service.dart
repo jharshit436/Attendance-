@@ -25,7 +25,7 @@ class Subjects {
           v: 0);
       http.Response response = await http.post(Uri.parse(CurrentUrl),
           headers: {"Content-Type": "application/json"},
-          body: jsonEncode(subjectdata.toJson()),
+          body: jsonEncode({"email":email,"subject":subject,"totalclasses":0,"attendedclasses":attendclasses,"v":0,"id":" "}),
           encoding: Encoding.getByName("utf-8"));
       print(response.statusCode);
     } catch (e) {
@@ -42,7 +42,6 @@ class Subjects {
     var data = jsonDecode(response.body);
     if (response.statusCode == 200) {
       List<dynamic> prods = json.decode(response.body);
-      print(prods);
       list = prods.map((e) => SubjectModel.fromMap(e)).toList();
       return list;
     } else {

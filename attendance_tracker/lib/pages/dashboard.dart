@@ -38,7 +38,7 @@ class _DashboardState extends State<Dashboard> {
           total: sm1[index].totalclasses,
           attended: sm1[index].attendclasses);
     });
-    Navigator.push(
+    Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => Dashboard()));
   }
 
@@ -52,7 +52,7 @@ class _DashboardState extends State<Dashboard> {
           total: sm1[index].totalclasses,
           attended: sm1[index].attendclasses);
     });
-    Navigator.push(
+    Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => Dashboard()));
   }
 
@@ -66,7 +66,7 @@ class _DashboardState extends State<Dashboard> {
           total: sm1[index].totalclasses,
           attended: sm1[index].attendclasses);
     });
-    Navigator.push(
+    Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => Dashboard()));
   }
 
@@ -80,7 +80,21 @@ class _DashboardState extends State<Dashboard> {
           total: sm1[index].totalclasses,
           attended: sm1[index].attendclasses);
     });
-    Navigator.push(
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => Dashboard()));
+  }
+
+  void DeleteSubject(int index) {
+    setState(() {
+      ma.DeleteSubject(
+          context: context,
+          id: sm1[index].id,
+          subject: sm1[index].subject,
+          email: LoginCredentials.email,
+          total: sm1[index].totalclasses,
+          attended: sm1[index].attendclasses);
+    });
+    Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => Dashboard()));
   }
 
@@ -94,213 +108,225 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Material(
-        borderRadius: BorderRadius.circular(25),
-        child: Scaffold(
-          backgroundColor: Vx.white,
-          resizeToAvoidBottomInset: true,
-          appBar: AppBar(
-            actions: <Widget>[Alerts()],
-            foregroundColor: Vx.black,
-            elevation: 0.0,
-            backgroundColor: Color.fromARGB(0, 36, 17, 17),
-            centerTitle: true,
-            title: Container(
-              child: "Dashboard".text.bold.make(),
-              // style: TextStyle(color: Colors.black)
+      home: RefreshIndicator(
+        onRefresh: () async {
+          s.getSubject();
+        },
+        child: Material(
+          borderRadius: BorderRadius.circular(25),
+          child: Scaffold(
+            backgroundColor: Vx.white,
+            resizeToAvoidBottomInset: true,
+            appBar: AppBar(
+              actions: <Widget>[Alerts()],
+              foregroundColor: Vx.black,
+              elevation: 0.0,
+              backgroundColor: Color.fromARGB(0, 36, 17, 17),
+              centerTitle: true,
+              title: Container(
+                child: "Dashboard".text.bold.make(),
+                // style: TextStyle(color: Colors.black)
+              ),
             ),
-          ),
-          body: Container(
-            child: FutureBuilder(
-                future: s.getSubject(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return ListView.builder(
-                        itemCount: sm1.length,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: EdgeInsets.all(10),
-                            child: AnimatedContainer(
-                              duration:
-                                  Duration(milliseconds: 300 + (index * 100)),
-                              curve: Curves.easeInOut,
-                              height: 125,
-                              width: 100,
-                              decoration: BoxDecoration(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(25)),
-                                  border: Border.all(
-                                    color: Colors.grey,
-                                  ),
-                                  boxShadow: const [
-                                    BoxShadow(
-                                      color: Vx.gray100,
-                                      blurRadius: 2.0,
-                                      spreadRadius: 0.0,
-                                      offset: Offset(2.0, 2.0),
-                                    )
-                                  ]),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    height: 120,
-                                    width: 120,
-                                    // pie chart
-                                    child: PieChart(
-                                      animationDuration:
-                                          Duration(milliseconds: 800),
-                                      dataMap: {
-                                        "Present":
-                                            sm1[index].attendclasses.toDouble(),
-                                        "Absent": (sm1[index].totalclasses -
-                                                sm1[index].attendclasses)
-                                            .toDouble()
-                                      },
-                                      chartRadius:
-                                          MediaQuery.of(context).size.width,
-                                      chartValuesOptions: ChartValuesOptions(
-                                          showChartValuesInPercentage: true),
-                                      legendOptions:
-                                          LegendOptions(showLegends: false),
+            body: Container(
+              child: FutureBuilder(
+                  future: s.getSubject(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return ListView.builder(
+                          itemCount: sm1.length,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: EdgeInsets.all(10),
+                              child: AnimatedContainer(
+                                duration:
+                                    Duration(milliseconds: 300 + (index * 100)),
+                                curve: Curves.easeInOut,
+                                height: 125,
+                                width: 100,
+                                decoration: BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(25)),
+                                    border: Border.all(
+                                      color: Colors.grey,
                                     ),
-                                  ),
-                                  Column(
-                                    children: [
-                                      // name
-                                      Row(children: [
-                                        Container(
-                                          child: Center(
-                                            child: (sm1[index].subject)
-                                                .text
-                                                .size(30)
-                                                .make(),
-                                          ),
-                                        ),
-                                        Container(
-                                          alignment: Alignment.centerRight,
-                                          child: Container(
-                                            alignment: Alignment.topRight,
-                                            child: PopupMenuButton(
-                                              iconSize: 22,
-                                              itemBuilder: (context) => [
-                                                PopupMenuItem(
-                                                  child: Text("Undo Present"),
-                                                  onTap: () {
-                                                    undoPresnt(index);
-                                                  },
-                                                ),
-                                                PopupMenuItem(
-                                                  child: Text("Undo Absent"),
-                                                  onTap: () {
-                                                    undoAbsent(index);
-                                                  },
-                                                ),
-                                                PopupMenuItem(
-                                                    child: Text(
-                                                  "Delete",
-                                                  style: TextStyle(
-                                                      color: Vx.red500),
-                                                ))
-                                              ],
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        color: Vx.gray100,
+                                        blurRadius: 2.0,
+                                        spreadRadius: 0.0,
+                                        offset: Offset(2.0, 2.0),
+                                      )
+                                    ]),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      height: 120,
+                                      width: 120,
+                                      // pie chart
+                                      child: PieChart(
+                                        animationDuration:
+                                            Duration(milliseconds: 800),
+                                        dataMap: {
+                                          "Present": sm1[index]
+                                              .attendclasses
+                                              .toDouble(),
+                                          "Absent": (sm1[index].totalclasses -
+                                                  sm1[index].attendclasses)
+                                              .toDouble()
+                                        },
+                                        chartRadius:
+                                            MediaQuery.of(context).size.width,
+                                        chartValuesOptions: ChartValuesOptions(
+                                            showChartValuesInPercentage: true),
+                                        legendOptions:
+                                            LegendOptions(showLegends: false),
+                                      ),
+                                    ),
+                                    Column(
+                                      children: [
+                                        // name
+                                        Row(children: [
+                                          Container(
+                                            child: Center(
+                                              child: (sm1[index].subject)
+                                                  .text
+                                                  .size(30)
+                                                  .make(),
                                             ),
                                           ),
-                                        )
-                                      ]),
-                                      Row(
-                                        children: [
-                                          // Attendance
-                                          Column(
-                                            children: [
-                                              Container(
-                                                  child: Text("Total Class: " +
-                                                      sm1[index]
-                                                          .totalclasses
-                                                          .toString())),
-                                              Container(
-                                                  child: Text("Attend: " +
-                                                      sm1[index]
-                                                          .attendclasses
-                                                          .toString()))
-                                            ],
-                                          ),
-                                          Column(
-                                            children: [
-                                              const SizedBox(
-                                                width: 0,
-                                                height: 0,
-                                              ),
-                                              Column(
-                                                children: [
-                                                  SizedBox(
-                                                    width: 150,
-                                                  ),
-                                                  InkWell(
-                                                    child: AnimatedContainer(
-                                                      duration:
-                                                          Duration(seconds: 3),
-                                                      height: 30,
-                                                      width: 75,
-                                                      alignment:
-                                                          Alignment.center,
-                                                      child: Text("Present"),
-                                                      decoration: BoxDecoration(
-                                                          color: Vx.green300,
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(8)),
-                                                    ),
+                                          Container(
+                                            alignment: Alignment.centerRight,
+                                            child: Container(
+                                              alignment: Alignment.topRight,
+                                              child: PopupMenuButton(
+                                                iconSize: 22,
+                                                itemBuilder: (context) => [
+                                                  PopupMenuItem(
+                                                    child: Text("Undo Present"),
                                                     onTap: () {
-                                                      setState(() {
-                                                        markPresnt(index);
-                                                      });
+                                                      undoPresnt(index);
                                                     },
                                                   ),
+                                                  PopupMenuItem(
+                                                    child: Text("Undo Absent"),
+                                                    onTap: () {
+                                                      undoAbsent(index);
+                                                    },
+                                                  ),
+                                                  PopupMenuItem(
+                                                    child: Text(
+                                                      "Delete",
+                                                      style: TextStyle(
+                                                          color: Vx.red500),
+                                                    ),
+                                                    onTap: () {
+                                                      DeleteSubject(index);
+                                                    },
+                                                  )
                                                 ],
                                               ),
-                                              const SizedBox(
-                                                height: 10,
-                                                width: 15,
-                                              ),
-                                              InkWell(
-                                                child: AnimatedContainer(
-                                                  duration:
-                                                      Duration(seconds: 3),
-                                                  height: 30,
-                                                  width: 75,
-                                                  alignment: Alignment.center,
-                                                  child: Text("Absent"),
-                                                  decoration: BoxDecoration(
-                                                      color: Color.fromARGB(
-                                                          246, 245, 98, 61),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8)),
+                                            ),
+                                          )
+                                        ]),
+                                        Row(
+                                          children: [
+                                            // Attendance
+                                            Column(
+                                              children: [
+                                                Container(
+                                                    child: Text(
+                                                        "Total Class: " +
+                                                            sm1[index]
+                                                                .totalclasses
+                                                                .toString())),
+                                                Container(
+                                                    child: Text("Attend: " +
+                                                        sm1[index]
+                                                            .attendclasses
+                                                            .toString()))
+                                              ],
+                                            ),
+                                            Column(
+                                              children: [
+                                                const SizedBox(
+                                                  width: 0,
+                                                  height: 0,
                                                 ),
-                                                onTap: () {
-                                                  markAbsent(index);
-                                                },
-                                              )
-                                            ],
-                                          ),
-                                        ],
-                                      )
-                                    ],
-                                  )
-                                ],
+                                                Column(
+                                                  children: [
+                                                    SizedBox(
+                                                      width: 150,
+                                                    ),
+                                                    InkWell(
+                                                      child: AnimatedContainer(
+                                                        duration: Duration(
+                                                            seconds: 3),
+                                                        height: 30,
+                                                        width: 75,
+                                                        alignment:
+                                                            Alignment.center,
+                                                        child: Text("Present"),
+                                                        decoration: BoxDecoration(
+                                                            color: Vx.green300,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8)),
+                                                      ),
+                                                      onTap: () {
+                                                        setState(() {
+                                                          markPresnt(index);
+                                                        });
+                                                      },
+                                                    ),
+                                                  ],
+                                                ),
+                                                const SizedBox(
+                                                  height: 10,
+                                                  width: 15,
+                                                ),
+                                                InkWell(
+                                                  child: AnimatedContainer(
+                                                    duration:
+                                                        Duration(seconds: 3),
+                                                    height: 30,
+                                                    width: 75,
+                                                    alignment: Alignment.center,
+                                                    child: Text("Absent"),
+                                                    decoration: BoxDecoration(
+                                                        color: Color.fromARGB(
+                                                            246, 245, 98, 61),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8)),
+                                                  ),
+                                                  onTap: () {
+                                                    markAbsent(index);
+                                                  },
+                                                )
+                                              ],
+                                            ),
+                                          ],
+                                        )
+                                      ],
+                                    )
+                                  ],
+                                ),
                               ),
-                            ),
-                          );
-                        });
-                  } else {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                }),
-          ),
-          floatingActionButton: AddSubject(),
-          drawer: Drawer(
-            child: MyDrawer(),
+                            );
+                          });
+                    } else {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                  }),
+            ),
+            floatingActionButton: AddSubject(),
+            drawer: Drawer(
+              child: MyDrawer(),
+            ),
           ),
         ),
       ),
@@ -325,6 +351,8 @@ class _AddSubjectState extends State<AddSubject> {
         subject: subjectController.text,
         totalclasses: 0,
         attendclasses: 0);
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => Dashboard()));
   }
 
   @override

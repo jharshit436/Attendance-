@@ -48,10 +48,11 @@ router.post('/createsubject',async (req,res)=>{
     
 })
 
-router.patch('/updateSubjectDetails/:id',async (req ,res)=>{
+router.post('/updateDetails/:id',async (req ,res)=>{
         try{
-            const id=req.params.id;
-            await dashboardModel.findByIdAndUpdate(id,req.body,function (err,docs){
+            const id=req.params.id.trim();
+            console.log(req.body);
+            dashboardModel.findByIdAndUpdate(id,req.body,function (err,docs){
                 if(err){
                     console.log(err);
                 }
@@ -66,17 +67,22 @@ router.patch('/updateSubjectDetails/:id',async (req ,res)=>{
 
 
 
-
-router.delete('delete/:id',async function(req,res){
+router.post('/Delete/:id',async function(req,res){
     try{
         const id=req.params.id;
-        const result=await userModel.deleteOne
-        
+        dashboardModel.findOneAndDelete(id,function(err,docs){
+            if(err){
+                console.log(err)
+            }
+            else{
+                console.log("Delete Successfully-",docs);
+            }
+        })
+        res.json(result1);
+        console.log(result);
     }
     catch(e){
         console.log(e);
     }
 })
-
-
 module.exports=router;

@@ -2,6 +2,9 @@ const mongoose=require('mongoose');
 
 const dashboardSchema=new mongoose.Schema(
     {
+        id:{
+            type:String,
+        },
         UserId:{
             type: String, 
         },
@@ -16,7 +19,10 @@ const dashboardSchema=new mongoose.Schema(
         },
         email:{
             type:String,
-            required:true
+            required:true,
+        },
+        __v:{
+            type:Number,
         }
     }
 );

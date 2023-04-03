@@ -1,3 +1,4 @@
+import 'package:attendance_tracker/pages/auth_page.dart';
 import 'package:attendance_tracker/pages/contactus.dart';
 import 'package:attendance_tracker/pages/dashboard.dart';
 import 'package:attendance_tracker/pages/profile.dart';
@@ -21,72 +22,122 @@ class _MyDrawerState extends State<MyDrawer> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Vx.white,
-      child: ListView(
-        children: [
-          DrawerHeader(child: Container(
-            child: Column(children: [
-              Icon(CupertinoIcons.person,size: 100,),
-              Center(
-                child: Column(children: [
-                  SizedBox(height: 15,),
-                  (LoginCredentials.email).text.color(Vx.blue500).make()
-                ],),
-              )
-            ],),
-          )),
-          Column(
-              children:[
-                InkWell(
-                  onTap: (){
-                //Navigator.pop(context);
-                Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboard()));
-                },
-                  child: Container(
-                      child:Row(children: [
-                        Icon(CupertinoIcons.home,size: 40,),
-                        SizedBox(width: 25,),
-                        ("Home").text.bold.color(Vx.blue500).make()
-                      ],
+        color: Vx.white,
+        child: ListView(children: [
+          DrawerHeader(
+              child: Container(
+            child: Column(
+              children: [
+                Icon(
+                  CupertinoIcons.person,
+                  size: 100,
+                ),
+                Center(
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 15,
+                      ),
+                      (LoginCredentials.email).text.color(Vx.blue500).make()
+                    ],
+                  ),
                 )
-              ),
+              ],
             ),
-                SizedBox(
-                  height: 15,
-                ),
-                InkWell(
-                  onTap: (){
-                    //Navigator.pop(context);
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => Profile()));
-                  },
-                  child: Container(
-                      child:Row(children: [
-                        Icon(CupertinoIcons.person_alt_circle,size: 40,),
-                        SizedBox(width: 15,),
-                        ("Profile").text.color(Vx.blue500).bold.make()
-                      ],
-                      )
+          )),
+          Column(children: [
+            InkWell(
+              onTap: () {
+                //Navigator.pop(context);
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => Dashboard()));
+              },
+              child: Container(
+                  child: Row(
+                children: [
+                  Icon(
+                    CupertinoIcons.home,
+                    size: 40,
                   ),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                InkWell(
-                  onTap: (){
-                    //Navigator.pop(context);
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => contactUs()));
-                  },
-                  child: Container(
-                      child:Row(children: [
-                        Icon(CupertinoIcons.mail_solid,size: 40,),
-                        SizedBox(width: 15,),
-                        ("Contact Us").text.color(Vx.blue500).bold.make()
-                      ],
-                      )
+                  SizedBox(
+                    width: 25,
                   ),
-                ),
-              ]
-          )
-    ]));
+                  ("Home").text.bold.color(Vx.blue500).make()
+                ],
+              )),
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            InkWell(
+              onTap: () {
+                //Navigator.pop(context);
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => Profile()));
+              },
+              child: Container(
+                  child: Row(
+                children: [
+                  Icon(
+                    CupertinoIcons.person_alt_circle,
+                    size: 40,
+                  ),
+                  SizedBox(
+                    width: 15,
+                  ),
+                  ("Profile").text.color(Vx.blue500).bold.make()
+                ],
+              )),
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            InkWell(
+              onTap: () {
+                //Navigator.pop(context);
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => contactUs()));
+              },
+              child: Container(
+                  child: Row(
+                children: [
+                  Icon(
+                    CupertinoIcons.mail_solid,
+                    size: 40,
+                  ),
+                  SizedBox(
+                    width: 15,
+                  ),
+                  ("Contact Us").text.color(Vx.blue500).bold.make()
+                ],
+              )),
+            ),
+            InkWell(
+              onTap: () {
+                //Navigator.pop(context);
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => LoginPage()));
+              },
+              child: Container(
+                  child: Row(
+                children: [
+                  Icon(
+                    CupertinoIcons.arrow_left,
+                    size: 40,
+                  ),
+                  SizedBox(
+                    width: 25,
+                  ),
+                  ("Logout ")
+                      .text
+                      .bold
+                      .color(Color.fromARGB(255, 233, 44, 44))
+                      .make()
+                ],
+              )),
+            ),
+          ]),
+          Container()
+        ]));
   }
 }
