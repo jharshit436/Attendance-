@@ -21,7 +21,7 @@ app.use("/api/user",userRoutes);
 app.use("/api/dashboard",dashbardRoutes);
 
 app.get("/",(req,res)=>{
-    res.send("Ecommerce App"); 
+    res.send("Attendance+"); 
 })  
 
 
