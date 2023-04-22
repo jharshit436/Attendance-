@@ -72,7 +72,7 @@ class _MyDrawerState extends State<MyDrawer> {
             InkWell(
               onTap: () {
                 //Navigator.pop(context);
-                Navigator.push(context,
+                Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) => Profile()));
               },
               child: Container(
@@ -112,6 +112,9 @@ class _MyDrawerState extends State<MyDrawer> {
                 ],
               )),
             ),
+            SizedBox(
+                    height: 15,
+                  ),
             InkWell(
               onTap: () {
                 //Navigator.pop(context);

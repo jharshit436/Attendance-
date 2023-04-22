@@ -70,7 +70,7 @@ router.post('/updateDetails/:id',async (req ,res)=>{
 router.post('/Delete/:id',async function(req,res){
     try{
         const id=req.params.id;
-        dashboardModel.findOneAndDelete(id,function(err,docs){
+        dashboardModel.findByIdAndDelete(id,function(err,docs){
             if(err){
                 console.log(err)
             }

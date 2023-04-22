@@ -76,16 +76,15 @@ class AuthService {
           headers: {"Content-Type": "application/json"},
           body: jsonEncode(userData.toJson()),
           encoding: Encoding.getByName("utf-8"));
-      
+      print(response.statusCode);
+
       if (response.statusCode == 200) {
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => Dashboard()));
         print("Success");
         LoginCredentials.email = email;
       } else if (response.statusCode == 401) {
-        
-      }
-       else {
+      } else {
         print("error");
       }
     } catch (e) {

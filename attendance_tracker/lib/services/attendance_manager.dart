@@ -20,8 +20,8 @@ class MarkAttendace {
           id: id.toString(),
           email: email,
           subject: subject,
-          totalclasses: total + 1,
-          attendclasses: attended + 1,
+          totalclasses: total,
+          attendclasses: attended,
           v: 0,
           dashboardId: '');
       print(subjectdata.email);
@@ -54,7 +54,7 @@ class MarkAttendace {
           id: id.toString(),
           email: email,
           subject: subject,
-          totalclasses: total + 1,
+          totalclasses: total,
           attendclasses: attended,
           v: 0,
           dashboardId: '');
@@ -89,7 +89,7 @@ class MarkAttendace {
           email: email,
           subject: subject,
           totalclasses: total,
-          attendclasses: attended - 1,
+          attendclasses: attended,
           v: 0,
           dashboardId: '');
       print(subjectdata.attendclasses);
@@ -122,8 +122,8 @@ class MarkAttendace {
           id: id.toString(),
           email: email,
           subject: subject,
-          totalclasses: total - 1,
-          attendclasses: attended - 1,
+          totalclasses: total,
+          attendclasses: attended,
           v: 0,
           dashboardId: '');
       print(subjectdata.attendclasses);

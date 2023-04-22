@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:attendance_tracker/models/subject_model.dart';
 import 'package:attendance_tracker/services/attendance_manager.dart';
 import 'package:attendance_tracker/services/dashboard_service.dart';
@@ -21,6 +23,8 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  StreamController<List<SubjectModel>> streamController =
+      StreamController<List<SubjectModel>>();
   void initState() {
     super.initState();
     loadList();
@@ -30,6 +34,9 @@ class _DashboardState extends State<Dashboard> {
 
   void markPresnt(int index) {
     setState(() {
+      sm1[index].attendclasses++;
+      sm1[index].totalclasses++;
+      streamController.add(s.list);
       ma.Present(
           context: context,
           id: sm1[index].id,
@@ -38,12 +45,16 @@ class _DashboardState extends State<Dashboard> {
           total: sm1[index].totalclasses,
           attended: sm1[index].attendclasses);
     });
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => Dashboard()));
+    loadList();
+    // Navigator.pushReplacement(
+    //     context, MaterialPageRoute(builder: (context) => Dashboard()));
   }
 
   void undoPresnt(int index) {
     setState(() {
+      sm1[index].attendclasses--;
+      sm1[index].totalclasses--;
+      streamController.add(s.list);
       ma.UndoPresent(
           context: context,
           id: sm1[index].id,
@@ -52,12 +63,15 @@ class _DashboardState extends State<Dashboard> {
           total: sm1[index].totalclasses,
           attended: sm1[index].attendclasses);
     });
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => Dashboard()));
+    loadList();
+    // Navigator.pushReplacement(
+    //     context, MaterialPageRoute(builder: (context) => Dashboard()));
   }
 
   void markAbsent(int index) {
     setState(() {
+      sm1[index].totalclasses++;
+      streamController.add(s.list);
       ma.Absent(
           context: context,
           id: sm1[index].id,
@@ -66,12 +80,13 @@ class _DashboardState extends State<Dashboard> {
           total: sm1[index].totalclasses,
           attended: sm1[index].attendclasses);
     });
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => Dashboard()));
+    loadList();
   }
 
   void undoAbsent(int index) {
     setState(() {
+      sm1[index].totalclasses--;
+      streamController.add(s.list);
       ma.UndoAbsent(
           context: context,
           id: sm1[index].id,
@@ -80,8 +95,7 @@ class _DashboardState extends State<Dashboard> {
           total: sm1[index].totalclasses,
           attended: sm1[index].attendclasses);
     });
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => Dashboard()));
+    loadList();
   }
 
   void DeleteSubject(int index) {
@@ -94,8 +108,7 @@ class _DashboardState extends State<Dashboard> {
           total: sm1[index].totalclasses,
           attended: sm1[index].attendclasses);
     });
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => Dashboard()));
+    loadList();
   }
 
   List<SubjectModel> sm1 = [];
@@ -103,6 +116,7 @@ class _DashboardState extends State<Dashboard> {
   void loadList() async {
     await s.getSubject();
     sm1 = s.list;
+    streamController.add(s.list);
   }
 
   @override
@@ -110,7 +124,7 @@ class _DashboardState extends State<Dashboard> {
     return MaterialApp(
       home: RefreshIndicator(
         onRefresh: () async {
-          s.getSubject();
+          loadList();
         },
         child: Material(
           borderRadius: BorderRadius.circular(25),
@@ -125,12 +139,11 @@ class _DashboardState extends State<Dashboard> {
               centerTitle: true,
               title: Container(
                 child: "Dashboard".text.bold.make(),
-                // style: TextStyle(color: Colors.black)
               ),
             ),
             body: Container(
-              child: FutureBuilder(
-                  future: s.getSubject(),
+              child: StreamBuilder(
+                  stream: streamController.stream,
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       return ListView.builder(
@@ -351,6 +364,7 @@ class _AddSubjectState extends State<AddSubject> {
         subject: subjectController.text,
         totalclasses: 0,
         attendclasses: 0);
+
     Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => Dashboard()));
   }
@@ -361,6 +375,7 @@ class _AddSubjectState extends State<AddSubject> {
         child: Icon(CupertinoIcons.add_circled_solid),
         onPressed: () {
           showModalBottomSheet(
+              isScrollControlled: true,
               shape: RoundedRectangleBorder(
                   borderRadius:
                       BorderRadius.vertical(top: Radius.circular(20))),
@@ -401,62 +416,5 @@ class _AddSubjectState extends State<AddSubject> {
                 );
               }));
         });
-    // return InkWell(
-    //   child: Container(
-    //       child: Image.network(
-    //     "https://cdn-icons-png.flaticon.com/512/3018/3018447.png",
-    //   )),
-    //   onTap: () {
-    // showModalBottomSheet(
-    //     context: context,
-    //     isScrollControlled: true,
-    //     builder: (BuildContext context) {
-    //       return SizedBox(
-    //         height: 200,
-    //         child: SingleChildScrollView(
-    //           child: Padding(
-    //             padding: EdgeInsets.only(
-    //                 bottom: MediaQuery.of(context).viewInsets.bottom),
-    //             child: Column(
-    //               children: [
-    //                 const SizedBox(
-    //                   height: 15,
-    //                 ),
-    //                 const Text(
-    //                   "Enter Details",
-    //                   style: TextStyle(
-    //                     fontSize: 35,
-    //                     fontWeight: FontWeight.w400,
-    //                   ),
-    //                 ),
-    //                 Padding(
-    //                   padding: const EdgeInsets.symmetric(
-    //                       vertical: 10, horizontal: 28),
-    //                   child: TextFormField(
-    //                     controller: subjectController,
-    //                     decoration: const InputDecoration(
-    //                         labelText: "Subject Name ",
-    //                         hintText: "Subject Name"),
-    //                   ),
-    //                 ),
-    //                 Center(
-    //                   child: ElevatedButton(
-    //                     onPressed: () {
-    //                       setState(() {
-    //                          AddSubject();
-    //                       });
-
-    //                     },
-    //                     child: const Text("Add"),
-    //                   ),
-    //                 )
-    //                   ],
-    //                 ),
-    //               ),
-    //             ),
-    //           );
-    //         });
-    //   },
-    // );
   }
 }
