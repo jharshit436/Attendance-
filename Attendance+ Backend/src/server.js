@@ -11,9 +11,9 @@ app.use(bodyParser.json());
 mongoose.set('strictQuery', true);
 
 // Database Conection 
-mongoose.connect('mongodb+srv://Developer:Harshit123@cluster0.qgbq7cs.mongodb.net/?retryWrites=true&w=majority').then(()=>{
-    console.log('Database Connected ');
-    })
+ mongoose.connect('mongodb+srv://Developer:123cluster0.qgbq7cs.mongodb.net/?retryWrites=true&w=majority').then(()=>{
+     console.log('Database Connected ');
+     })
 
 
 //middleware
